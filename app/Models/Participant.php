@@ -25,4 +25,11 @@ class Participant extends Model
     {
         return $this->hasMany(Exclusion::class);
     }
+
+    public function activeEvent()
+    {
+        return $this->events()
+            ->where('is_active', true)
+            ->first();
+    }
 }

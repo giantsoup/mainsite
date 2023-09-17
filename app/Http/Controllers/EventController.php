@@ -13,7 +13,10 @@ class EventController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Events/Index');
+        return Inertia::render('Events/Index',
+            [
+                'events' => Event::orderBy('name', 'desc')->get()
+            ]);
     }
 
     /**
@@ -37,7 +40,10 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        //
+        return Inertia::render('Events/Show',
+            [
+                'event' => $event
+            ]);
     }
 
     /**

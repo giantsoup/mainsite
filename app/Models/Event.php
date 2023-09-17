@@ -15,8 +15,17 @@ class Event extends Model
         , 'active'
     ];
 
+    protected $casts = [
+        'active' => 'boolean'
+    ];
+
     public function participants(): BelongsToMany
     {
         return $this->belongsToMany(Participant::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }
