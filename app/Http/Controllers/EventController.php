@@ -16,7 +16,8 @@ class EventController extends Controller
         return Inertia::render('Events/Index',
             [
                 'events' => Event::orderBy('name', 'desc')->get()
-            ]);
+            ]
+        );
     }
 
     /**
@@ -24,7 +25,7 @@ class EventController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Events/Create');
     }
 
     /**
@@ -32,7 +33,26 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            // Add more validation rules for other fields if needed
+        ]);
+
+        // Find the active event
+        $activeEvent = Event::active()->first();
+
+        // Create a new event
+        $event = Event::create($validatedData);
+
+        // Remove active from current active event and copy over its participants to our new event
+        if ($activeEvent) {
+            $event->participants()->sync($activeEvent->participants);
+            $activeEvent->update(['is_active' => false]);
+        }
+
+        // Return inertia view for the newly created event
+        return redirect()->route('events.show', ['event' => $event->id]);
     }
 
     /**
@@ -43,7 +63,9 @@ class EventController extends Controller
         return Inertia::render('Events/Show',
             [
                 'event' => $event
-            ]);
+                , 'participants' => $event->participants
+            ]
+        );
     }
 
     /**

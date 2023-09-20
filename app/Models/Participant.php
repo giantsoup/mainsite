@@ -14,6 +14,8 @@ class Participant extends Model
     protected $fillable = [
         'first_name'
         , 'last_name'
+        , 'email'
+        , 'phone'
     ];
 
     public function events(): BelongsToMany
@@ -31,5 +33,10 @@ class Participant extends Model
         return $this->events()
             ->where('is_active', true)
             ->first();
+    }
+
+    public function getNameAttribute(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

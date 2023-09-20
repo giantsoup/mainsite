@@ -10,7 +10,10 @@ const props = defineProps(['events']);
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Events</h2>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Events</h2>
+                <Link :href="route('events.create')" class="px-6 py-2 rounded bg-teal-500 hover:bg-teal-600 text-cyan-100">Create Event</Link>
+            </div>
         </template>
 
         <div class="py-12">

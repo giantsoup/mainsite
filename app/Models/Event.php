@@ -12,11 +12,11 @@ class Event extends Model
 
     protected $fillable = [
         'name'
-        , 'active'
+        , 'is_active'
     ];
 
     protected $casts = [
-        'active' => 'boolean'
+        'is_active' => 'boolean'
     ];
 
     public function participants(): BelongsToMany
