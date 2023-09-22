@@ -3,6 +3,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed, ref } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps(['event', 'participants', 'showAddParticipantForm']);
 const isNotDashboard = computed(() => !route().current('dashboard'));
@@ -55,28 +58,48 @@ function createParticipant() {
                             <span v-if="showAddParticipantForm">Hide Add Participants</span>
                         </div>
                         <div v-if="showAddParticipantForm">
-                            <form @submit.prevent="createParticipant">
+                            <form @submit.prevent="createParticipant" class="max-w-lg">
                                 <div class="p-6 text-gray-900 dark:text-gray-100">
                                     <div class="mb-4">
-                                        <div>
-                                            <label for="first_name" class="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">First Name</label>
-                                            <input type="text" name="first_name" id="first_name" v-model="form.first_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
-                                            <div v-if="form.errors.first_name">{{ form.errors.first_name }}</div>
+                                        <div class="mt-3">
+                                            <InputLabel for="first_name" value="First Name" />
+                                            <TextInput
+                                                id="first_name"
+                                                type="text"
+                                                class="mt-1 block w-full"
+                                                v-model="form.first_name"
+                                            />
+                                            <InputError class="mt-1" :message="form.errors.first_name" />
                                         </div>
-                                        <div>
-                                            <label for="last_name" class="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">Last Name</label>
-                                            <input type="text" name="last_name" id="last_name" v-model="form.last_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
-                                            <div v-if="form.errors.last_name">{{ form.errors.last_name }}</div>
+                                        <div class="mt-3">
+                                            <InputLabel for="last_name" value="Last Name" />
+                                            <TextInput
+                                                id="last_name"
+                                                type="text"
+                                                class="mt-1 block w-full"
+                                                v-model="form.last_name"
+                                            />
+                                            <InputError class="mt-1" :message="form.errors.last_name" />
                                         </div>
-                                        <div>
-                                            <label for="email" class="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">Email</label>
-                                            <input type="text" name="email" id="email" v-model="form.email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
-                                            <div v-if="form.errors.email">{{ form.errors.email }}</div>
+                                        <div class="mt-3">
+                                            <InputLabel for="email" value="Email" />
+                                            <TextInput
+                                                id="email"
+                                                type="email"
+                                                class="mt-1 block w-full"
+                                                v-model="form.email"
+                                            />
+                                            <InputError class="mt-1" :message="form.errors.email" />
                                         </div>
-                                        <div>
-                                            <label for="phone" class="block text-gray-800 dark:text-gray-200 text-sm font-bold mb-2">Phone</label>
-                                            <input type="text" name="phone" id="phone" v-model="form.phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
-                                            <div v-if="form.errors.phone">{{ form.errors.phone }}</div>
+                                        <div class="mt-3">
+                                            <InputLabel for="phone" value="Phone" />
+                                            <TextInput
+                                                id="phone"
+                                                type="text"
+                                                class="mt-1 block w-full"
+                                                v-model="form.phone"
+                                            />
+                                            <InputError class="mt-1" :message="form.errors.phone" />
                                         </div>
                                         <PrimaryButton type="submit" class="mt-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Add Participant</PrimaryButton>
                                     </div>
@@ -87,9 +110,9 @@ function createParticipant() {
                     <h2 class="block mt-8 text-gray-900 dark:text-gray-100">Participants</h2>
                     <hr>
                     <div v-for="participant in participants" class="mt-4 flex items-center">
-                        <div class="pt-4 text-gray-900 dark:text-gray-100">{{ participant.first_name }} {{ participant.last_name }}</div>
+                        <div class="pt-4 text-gray-900 dark:text-gray-100">{{ participant.name }}</div>
                         <div class="pt-4 text-gray-900 dark:text-gray-100 ml-4">{{ participant.email }}</div>
-                        <div class="pt-4 text-gray-900 dark:text-gray-100 ml-4">{{ participant.phone }}</div>
+                        <div class="pt-4 text-gray-900 dark:text-gray-100 ml-4">{{ participant.formatted_phone }}</div>
                     </div>
                 </div>
             </div>

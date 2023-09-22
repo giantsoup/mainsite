@@ -19,9 +19,12 @@ class DashboardController extends Controller
             );
         }
 
+        // if there are events, show the active event
+        $event = Event::where('is_active', true)->first() ?? null;
         return Inertia::render('Events/Show',
         [
-            'event' => Event::where('is_active', true)->first() ?? null
+            'event' => $event
+            , 'participants' => $event->participants
         ]);
     }
 }

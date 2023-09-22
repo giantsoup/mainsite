@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Participant;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ParticipantController extends Controller
 {
@@ -13,7 +14,9 @@ class ParticipantController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Participants/Index', [
+            'participants' => Participant::all()
+        ]);
     }
 
     /**
@@ -34,14 +37,16 @@ class ParticipantController extends Controller
             , 'last_name' => 'required|string|max:255'
             , 'email' => 'string|max:255'
             , 'phone' => 'string|max:10'
-            , 'event_id' => 'integer'
+            , 'event_id' => 'integer|nullable'
         ]);
 
         $participant = Participant::create($validated_data);
 
-        // add participant to the event from which it was created
-        $event = Event::find($validated_data['event_id']);
-        $event->participants()->attach($participant);
+        if ($validated_data['event_id']) {
+            // add participant to the event from which it was created
+            $event = Event::find($validated_data['event_id']);
+            $event->participants()->attach($participant);
+        }
 
         // return back to event from which the participant was created
         return redirect()->route('events.show', ['event' => $event->id]);
@@ -52,7 +57,9 @@ class ParticipantController extends Controller
      */
     public function show(Participant $participant)
     {
-        //
+        return Inertia::render('Participants/Show', [
+            'participant' => $participant
+        ]);
     }
 
     /**

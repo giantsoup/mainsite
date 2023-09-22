@@ -18,6 +18,11 @@ class Participant extends Model
         , 'phone'
     ];
 
+    protected $appends = [
+        'name'
+        , 'formatted_phone'
+    ];
+
     public function events(): BelongsToMany
     {
         return $this->belongsToMany(Event::class);
@@ -39,4 +44,15 @@ class Participant extends Model
     {
         return $this->first_name . ' ' . $this->last_name;
     }
+
+    public function getFormattedPhoneAttribute(): string
+    {
+        return '(' . substr($this->phone, 0, 3) . ') ' . substr($this->phone, 3, 3) . '-' . substr($this->phone, 6);
+    }
+
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = preg_replace('/\D/', '', $value);
+    }
+
 }
