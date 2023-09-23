@@ -73,7 +73,9 @@ class ParticipantController extends Controller
      */
     public function edit(Participant $participant)
     {
-        //
+        return Inertia::render('Participants/Edit', [
+            'participant' => $participant
+        ]);
     }
 
     /**
@@ -81,7 +83,16 @@ class ParticipantController extends Controller
      */
     public function update(Request $request, Participant $participant)
     {
-        //
+        $validated_data = $request->validate([
+            'first_name' => 'required|string|max:255'
+            , 'last_name' => 'required|string|max:255'
+            , 'email' => 'string|max:255'
+            , 'phone' => 'string'
+        ]);
+
+        $participant->update($validated_data);
+
+        return to_route('participants.show', ['participant' => $participant->id]);
     }
 
     /**

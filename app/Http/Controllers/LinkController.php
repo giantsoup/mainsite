@@ -68,6 +68,9 @@ class LinkController extends Controller
      */
     public function destroy(Link $link)
     {
-        //
+        $participant_id = $link->participant_id;
+        $link->delete();
+
+        return to_route('participants.show', ['participant' => $participant_id]);
     }
 }
