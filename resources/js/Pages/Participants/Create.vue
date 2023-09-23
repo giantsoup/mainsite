@@ -12,16 +12,10 @@ const form = useForm({
     , email: ''
     , phone: ''
     , event_id: null
+    , redirect: 'participants.index'
 });
 function createParticipant() {
-    form.post(route('participants.store'),
-        {
-            preserveScroll: true
-            , onSuccess: () => {
-                form.reset();
-            }
-        }
-    );
+    form.post(route('participants.store'));
 }
 </script>
 

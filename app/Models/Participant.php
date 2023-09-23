@@ -33,6 +33,11 @@ class Participant extends Model
         return $this->hasMany(Exclusion::class);
     }
 
+    public function links(): HasMany
+    {
+        return $this->hasMany(Link::class);
+    }
+
     public function activeEvent()
     {
         return $this->events()
@@ -52,6 +57,13 @@ class Participant extends Model
 
     public function setPhoneAttribute($value)
     {
+        // Remove '+1' or '001' prefix
+        if (str_starts_with($value, '+1')) {
+            $value = substr($value, 2);
+        } elseif (str_starts_with($value, '001')) {
+            $value = substr($value, 3);
+        }
+
         $this->attributes['phone'] = preg_replace('/\D/', '', $value);
     }
 

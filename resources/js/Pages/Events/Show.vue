@@ -17,13 +17,13 @@ const form = useForm({
     , email: ''
     , phone: ''
     , event_id: props.event.id
+    , redirect: 'events.index'
 });
 function createParticipant() {
     form.post(route('participants.store'),
         {
             preserveScroll: true
             , onSuccess: () => {
-                // form.defaults();
                 form.reset();
             }
         }
@@ -109,10 +109,14 @@ function createParticipant() {
                     </div>
                     <h2 class="block mt-8 text-gray-900 dark:text-gray-100">Participants</h2>
                     <hr>
-                    <div v-for="participant in participants" class="mt-4 flex items-center">
-                        <div class="pt-4 text-gray-900 dark:text-gray-100">{{ participant.name }}</div>
-                        <div class="pt-4 text-gray-900 dark:text-gray-100 ml-4">{{ participant.email }}</div>
-                        <div class="pt-4 text-gray-900 dark:text-gray-100 ml-4">{{ participant.formatted_phone }}</div>
+                    <div v-for="(participant, index) in participants" class="w-full mt-4 flex items-center border-b border-gray-100 pb-8">
+                        <div>
+                            <div class="text-lg pt-4 text-gray-900 dark:text-gray-100">{{ participant.name }}</div>
+                            <div v-for="link in participant.links" class="pl-6 pt-4 text-gray-900 dark:text-gray-100">
+                                <p>{{ link.name }}</p>
+                                <a :href="link.url" target="_blank">{{ link.url }}</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

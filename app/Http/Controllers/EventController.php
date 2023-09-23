@@ -63,7 +63,7 @@ class EventController extends Controller
         return Inertia::render('Events/Show',
             [
                 'event' => $event
-                , 'participants' => $event->participants
+                , 'participants' => $event->participants()->with('links')->get()
             ]
         );
     }

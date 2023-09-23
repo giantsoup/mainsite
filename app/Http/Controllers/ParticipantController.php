@@ -24,7 +24,7 @@ class ParticipantController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Participants/Create');
     }
 
     /**
@@ -36,7 +36,7 @@ class ParticipantController extends Controller
             'first_name' => 'required|string|max:255'
             , 'last_name' => 'required|string|max:255'
             , 'email' => 'string|max:255'
-            , 'phone' => 'string|max:10'
+            , 'phone' => 'string'
             , 'event_id' => 'integer|nullable'
         ]);
 
@@ -48,8 +48,14 @@ class ParticipantController extends Controller
             $event->participants()->attach($participant);
         }
 
-        // return back to event from which the participant was created
-        return redirect()->route('events.show', ['event' => $event->id]);
+        if ($request->all()['redirect'] === 'events.show') {
+            // return back to event from which the participant was created
+            return to_route('events.show', ['event' => $validated_data['event_id']]);
+        }
+        if ($request->all()['redirect'] === 'participants.index') {
+            // return back to participants index
+            return to_route('participants.index');
+        }
     }
 
     /**
@@ -58,7 +64,7 @@ class ParticipantController extends Controller
     public function show(Participant $participant)
     {
         return Inertia::render('Participants/Show', [
-            'participant' => $participant
+            'participant' => $participant->load('links')
         ]);
     }
 

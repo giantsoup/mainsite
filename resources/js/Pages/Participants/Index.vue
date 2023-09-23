@@ -21,8 +21,7 @@ const props = defineProps(['participants']);
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <ul class="p-6 text-gray-900 dark:text-gray-100">
                         <li v-for="participant in participants" :key="participant.id">
-                            <Link :href="route('participants.show', participant.id)" class="block py-2">{{ participant.name }}</Link>
-                            <hr>
+                            <Link :href="route('participants.show', participant.id)" class="block py-3">{{ participant.name }}</Link>
                         </li>
                     </ul>
                 </div>

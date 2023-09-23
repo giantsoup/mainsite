@@ -11,7 +11,8 @@ class Link extends Model
     use HasFactory;
 
     protected $fillable = [
-        'event_participant_id'
+        'participant_id'
+        , 'name'
         , 'url'
     ];
 
