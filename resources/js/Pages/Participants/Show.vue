@@ -15,7 +15,12 @@ const form = useForm({
     , participant_id: props.participant.id
 });
 function createLink() {
-    form.post(route('links.store'));
+    form.post(route('links.store'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            form.reset();
+        }
+    });
 }
 
 const showAddLinkForm = ref(false);
