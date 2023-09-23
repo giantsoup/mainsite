@@ -63,8 +63,20 @@ class ParticipantController extends Controller
      */
     public function show(Participant $participant)
     {
+        $all_participants = Participant::all();
+        $excluded_participants_ids = $participant->exclusions()->get()->pluck('excluded_participant_id')->toArray();
+        $available_participants = $all_participants->whereNotIn('id', $excluded_participants_ids)->where('id', '!=', $participant->id);
+
+        $participant_exclusions = $participant->exclusions;
+        $exclusions = [];
+        foreach ($participant_exclusions as $exclusion) {
+            $exclusions[$exclusion->id] = $exclusion->excludedParticipant->name;
+        }
+
         return Inertia::render('Participants/Show', [
-            'participant' => $participant->load('links')
+            'participant' => $participant->load('links')->load('exclusions')
+            , 'exclusions' => $exclusions
+            , 'available_participants' => $available_participants->toArray()
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\ExclusionController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\ProfileController;
@@ -40,6 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('links', LinkController::class);
     Route::resource('events', EventController::class);
+    Route::resource('exclusions', ExclusionController::class);
     Route::resource('participants', ParticipantController::class);
 });
 

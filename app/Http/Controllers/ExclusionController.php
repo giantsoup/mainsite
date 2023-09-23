@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Link;
+use App\Models\Exclusion;
+use App\Models\Participant;
 use Illuminate\Http\Request;
 
-class LinkController extends Controller
+class ExclusionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,11 +31,10 @@ class LinkController extends Controller
     {
         $validated_data = $request->validate([
             'participant_id' => 'required|integer'
-            , 'name' => 'required|string|max:255'
-            , 'url' => 'string|max:255|nullable'
+            , 'excluded_participant_id' => 'required|integer'
         ]);
 
-        Link::create($validated_data);
+        Exclusion::create($validated_data);
 
         return to_route('participants.show', ['participant' => $validated_data['participant_id']]);
     }
@@ -42,7 +42,7 @@ class LinkController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Link $link)
+    public function show(Exclusion $exclusion)
     {
         //
     }
@@ -50,7 +50,7 @@ class LinkController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Link $link)
+    public function edit(Exclusion $exclusion)
     {
         //
     }
@@ -58,7 +58,7 @@ class LinkController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Link $link)
+    public function update(Request $request, Exclusion $exclusion)
     {
         //
     }
@@ -66,10 +66,11 @@ class LinkController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Link $link)
+    public function destroy(Exclusion $exclusion)
     {
-        $participant_id = $link->participant_id;
-        $link->delete();
+        $participant_id = $exclusion->participant_id;
+
+        $exclusion->delete();
 
         return to_route('participants.show', ['participant' => $participant_id]);
     }

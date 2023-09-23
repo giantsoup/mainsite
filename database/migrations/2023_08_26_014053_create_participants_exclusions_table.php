@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('exclusions', function (Blueprint $table) {
+            $table->id();
             $table->integer('participant_id')->unsigned();
             $table->integer('excluded_participant_id')->unsigned();
+            $table->timestamps();
         });
     }
 

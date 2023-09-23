@@ -6,24 +6,41 @@ import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import {ref} from "vue";
+import SelectInput from "@/Components/SelectInput.vue";
 
-const props = defineProps(['participant']);
+const props = defineProps(['participant', 'available_participants', 'exclusions']);
 
-const form = useForm({
+const formLink = useForm({
     name: ''
     , url: ''
     , participant_id: props.participant.id
 });
+
+const formExclusion = useForm({
+    excluded_participant_id: ''
+    , participant_id: props.participant.id
+});
+
 function createLink() {
-    form.post(route('links.store'), {
+    formLink.post(route('links.store'), {
         preserveScroll: true,
         onSuccess: () => {
-            form.reset();
+            formLink.reset();
+        }
+    });
+}
+
+function createExclusion() {
+    formExclusion.post(route('exclusions.store'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            formExclusion.reset();
         }
     });
 }
 
 const showAddLinkForm = ref(false);
+const showAddExclusionForm = ref(false);
 </script>
 
 <template>
@@ -63,9 +80,9 @@ const showAddLinkForm = ref(false);
                                                 id="name"
                                                 type="text"
                                                 class="mt-1 block w-full"
-                                                v-model="form.name"
+                                                v-model="formLink.name"
                                             />
-                                            <InputError class="mt-1" :message="form.errors.name" />
+                                            <InputError class="mt-1" :message="formLink.errors.name" />
                                         </div>
                                         <div class="mt-3">
                                             <InputLabel for="url" value="URL" />
@@ -73,11 +90,11 @@ const showAddLinkForm = ref(false);
                                                 id="url"
                                                 type="text"
                                                 class="mt-1 block w-full"
-                                                v-model="form.url"
+                                                v-model="formLink.url"
                                             />
-                                            <InputError class="mt-1" :message="form.errors.url" />
+                                            <InputError class="mt-1" :message="formLink.errors.url" />
                                         </div>
-                                        <PrimaryButton type="submit" class="mt-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Add Link</PrimaryButton>
+                                        <PrimaryButton type="submit" class="mt-4" :class="{ 'opacity-25': formLink.processing }" :disabled="formLink.processing">Add Link</PrimaryButton>
                                     </div>
                                 </div>
                             </form>
@@ -87,7 +104,46 @@ const showAddLinkForm = ref(false);
                                 <p>{{ link.name }}</p>
                                 <a :href="link.url" target="_blank">{{ link.url }}</a>
                             </div>
-                            <Link :href="route('links.destroy', [link.id])" method="delete" class="inline-block mt-6 px-6 py-2 rounded bg-teal-500 hover:bg-teal-600 text-cyan-100">Delete</Link>
+                            <Link :href="route('links.destroy', [link.id])" method="delete" as="button" class="inline-block mt-6 px-6 py-2 rounded bg-teal-500 hover:bg-teal-600 text-cyan-100">Delete</Link>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h3 class="text-2xl mb-2 text-gray-900 dark:text-gray-100">Exclusions</h3>
+                        <hr>
+                        <div @click="showAddExclusionForm = !showAddExclusionForm" class="mt-4 cursor-pointer text-gray-800 dark:text-gray-200 text-right">
+                            <span v-if="!showAddExclusionForm">Add Exclusion</span>
+                            <span v-if="showAddExclusionForm">Hide Add Exclusion</span>
+                        </div>
+                        <div v-if="showAddExclusionForm">
+                            <form @submit.prevent="createExclusion" class="max-w-lg">
+                                <div class="text-gray-900 dark:text-gray-100">
+                                    <div class="mb-4">
+                                        <div class="mt-3">
+                                            <InputLabel for="excluded_participant_id" value="Excluded" />
+                                            <SelectInput
+                                                id="excluded_participant_id"
+                                                v-model="formExclusion.excluded_participant_id"
+                                                :options="Object.values(available_participants)"
+                                                option-value="id"
+                                                option-label="name"
+                                                :default-option="{
+                                                    id: '',
+                                                    name: 'Select a Participant'
+                                                }"
+                                                :disabled="formExclusion.processing"
+                                            />
+                                            <InputError :message="formExclusion.errors.excluded_participant_id" />
+                                        </div>
+                                        <PrimaryButton type="submit" class="mt-4" :class="{ 'opacity-25': formExclusion.processing }" :disabled="formExclusion.processing">Add Exclusion</PrimaryButton>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div v-for="(exclusion_name, exclusion_id) in exclusions" class="flex justify-between items-center pt-4 text-gray-900 dark:text-gray-100">
+                            <div>
+                                <p>{{ exclusion_name }}</p>
+                            </div>
+                            <Link :href="route('exclusions.destroy', [exclusion_id])" method="delete" as="button" class="mt-6 px-6 py-2 rounded bg-teal-500 hover:bg-teal-600 text-cyan-100">Delete</Link>
                         </div>
                     </div>
                 </div>

@@ -39,12 +39,12 @@ defineExpose({ focus: () => input.value.focus() })
 
 <template>
     <select
-        class="border-gray-300 focus:border-primary-500 focus:ring-primary-500 rounded-md shadow-sm"
+        class="border-gray-300 focus:border-primary-500 focus:ring-primary-500 rounded-md shadow-sm text-gray-900"
         :value="modelValue"
         @change="$emit('update:modelValue', $event.target.value)"
         ref="input"
     >
-        <option v-if="defaultOption" disabled hidden :value="defaultOption[optionValue]">
+        <option v-if="defaultOption" :value="defaultOption[optionValue]">
             {{ defaultOption[optionLabel] }}
         </option>
         <option v-for="option in options" :key="option[optionValue]" :value="option[optionValue]">
