@@ -96,6 +96,7 @@ class EventController extends Controller
     public static function runLottery(Event $event)
     {
         Log::info('Running lottery for event ' . $event->id);
+        Log::info('---------------------------------------');
 
         // setup event matches so that we can track who has been selected as we go
         $event_matches = [];
@@ -106,20 +107,28 @@ class EventController extends Controller
         // get the previous 3 events
         $previousEvents = Event::where('id', '!=', $event->id)->orderBy('name', 'desc')->limit(3)->get();
 
+        // TODO: change around the tracking of available participants and event matches to only be an array of participant ids
+
         // for each participant, use their exclusions and previous matches to find a match
         foreach ($participants as $participant) {
+            Log::info('Matches for this Lottery so far:');
+            Log::info($event_matches);
+            Log::info('Running matching for:' . $participant->name);
             // get participant exclusions
             $exclusions = $participant->exclusions()->get();
-
+            Log::info('Exclusions:');
+            Log::info($exclusions);
             // get participant previous matches
             $previousMatches = $participant->eventMatches()->whereIn('event_id', $previousEvents->pluck('id'))->get();
-
+            Log::info('Previous Matches:');
+            Log::info($previousMatches);
             // get all participants that are not excluded and have not been matched over the past 3 years and have not already been selected in this lottery
             $availableParticipants = $participants
                 ->whereNotIn('id', $exclusions->pluck('excluded_participant_id')->toArray())
                 ->whereNotIn('id', $previousMatches->pluck('matched_participant_id')->toArray())
                 ->whereNotIn('id', collect($event_matches)->pluck('matched_participant_id')->toArray());
-
+            Log::info('Available Participants:');
+            Log::info($availableParticipants);
             // if there are available participants
             if ($availableParticipants->isNotEmpty()) {
                 // create an event match for this participant
