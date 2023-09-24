@@ -52,6 +52,12 @@ function createParticipant() {
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+<!--                    create the link to the lottery page-->
+                    <div class="flex justify-end">
+                        <Link :href="route('events.lottery', props.event.id)">
+                            <PrimaryButton>Lottery</PrimaryButton>
+                        </Link>
+                    </div>
                     <div class="">
                         <div @click="showAddParticipantForm = !showAddParticipantForm" class="cursor-pointer text-gray-800 dark:text-gray-200 text-right">
                             <span v-if="!showAddParticipantForm">Add Participants</span>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class EventController extends Controller
@@ -90,5 +91,49 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         //
+    }
+
+    public static function runLottery(Event $event)
+    {
+        Log::info('Running lottery for event ' . $event->id);
+
+        // setup event matches so that we can track who has been selected as we go
+        $event_matches = [];
+
+        // get all event participants
+        $participants = $event->participants()->get();
+
+        // get the previous 3 events
+        $previousEvents = Event::where('id', '!=', $event->id)->orderBy('name', 'desc')->limit(3)->get();
+
+        // for each participant, use their exclusions and previous matches to find a match
+        foreach ($participants as $participant) {
+            // get participant exclusions
+            $exclusions = $participant->exclusions()->get();
+
+            // get participant previous matches
+            $previousMatches = $participant->eventMatches()->whereIn('event_id', $previousEvents->pluck('id'))->get();
+
+            // get all participants that are not excluded and have not been matched over the past 3 years and have not already been selected in this lottery
+            $availableParticipants = $participants
+                ->whereNotIn('id', $exclusions->pluck('excluded_participant_id')->toArray())
+                ->whereNotIn('id', $previousMatches->pluck('matched_participant_id')->toArray())
+                ->whereNotIn('id', collect($event_matches)->pluck('matched_participant_id')->toArray());
+
+            // if there are available participants
+            if ($availableParticipants->isNotEmpty()) {
+                // create an event match for this participant
+                $eventMatch = $event->matches()->create([
+                    'participant_id' => $participant->id
+                    , 'matched_participant_id' => $availableParticipants->random()->id
+                ]);
+
+                // add this event match to the event matches array
+                $event_matches[] = $eventMatch;
+            } else {
+                // if there are no available participants, we have a problem
+                Log::error('No available participants for participant ' . $participant->id);
+            }
+        }
     }
 }

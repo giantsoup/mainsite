@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('event_id')->unsigned();
             $table->integer('participant_id')->unsigned();
-            $table->integer('partner_participant_id')->unsigned();
+            $table->integer('matched_participant_id')->unsigned();
             $table->timestamps();
         });
     }

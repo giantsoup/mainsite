@@ -38,6 +38,11 @@ class Participant extends Model
         return $this->hasMany(Link::class);
     }
 
+    public function eventMatches()
+    {
+        return $this->hasMany(EventMatch::class, 'participant_id');
+    }
+
     public function activeEvent()
     {
         return $this->events()

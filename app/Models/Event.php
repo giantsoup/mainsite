@@ -24,6 +24,11 @@ class Event extends Model
         return $this->belongsToMany(Participant::class);
     }
 
+    public function matches()
+    {
+        return $this->hasMany(EventMatch::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);

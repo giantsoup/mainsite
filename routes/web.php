@@ -6,6 +6,7 @@ use App\Http\Controllers\ExclusionController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Event;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,11 +23,15 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+    $event = Event::where('is_active', true)->first() ?? null;
+    $participants = null;
+    if ($event) {
+        $participants = $event->participants()->with('links')->get() ?? null;
+    }
     return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        'canLogin' => Route::has('login')
+        , 'event' => $event
+        , 'participants' => $participants
     ]);
 });
 
@@ -38,6 +43,9 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // setup event lottery route
+    Route::get('events/{event}/lottery', [EventController::class, 'runLottery'])->name('events.lottery');
 
     Route::resource('links', LinkController::class);
     Route::resource('events', EventController::class);
