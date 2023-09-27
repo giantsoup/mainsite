@@ -74,7 +74,7 @@ class ParticipantSeeder extends Seeder
             [
                 'id' => 8
                 , 'first_name' => 'Brian'
-                , 'last_name' => 'Hjilmastad'
+                , 'last_name' => 'Hjilmstead'
                 , 'email' => 'testing@mailinator.com'
                 , 'phone' => '7608675309'
                 , 'exclude' => 7

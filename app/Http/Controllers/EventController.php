@@ -65,6 +65,7 @@ class EventController extends Controller
             [
                 'event' => $event
                 , 'participants' => $event->participants()->with('links')->get()
+                , 'matches' => $event->matches()->with('participant', 'matchedParticipant')->get()
             ]
         );
     }
@@ -93,13 +94,22 @@ class EventController extends Controller
         //
     }
 
+    public static function rerunLottery(Event $event)
+    {
+        // delete all event matches and then call runLottery
+        $event->matches()->delete();
+        self::runLottery($event);
+
+        return back();
+    }
+
     public static function runLottery(Event $event)
     {
         Log::info('Running lottery for event ' . $event->id);
         Log::info('---------------------------------------');
 
         // setup event matches so that we can track who has been selected as we go
-        $event_matches = [];
+        $event_matches = collect();
 
         // get all event participants
         $participants = $event->participants()->get();
@@ -107,28 +117,32 @@ class EventController extends Controller
         // get the previous 3 events
         $previousEvents = Event::where('id', '!=', $event->id)->orderBy('name', 'desc')->limit(3)->get();
 
-        // TODO: change around the tracking of available participants and event matches to only be an array of participant ids
-
+        $count = 1;
         // for each participant, use their exclusions and previous matches to find a match
         foreach ($participants as $participant) {
             Log::info('Matches for this Lottery so far:');
-            Log::info($event_matches);
+            Log::info(print_r($event_matches->pluck('matched_participant_id', 'participant_id'), true));
             Log::info('Running matching for:' . $participant->name);
+
             // get participant exclusions
             $exclusions = $participant->exclusions()->get();
             Log::info('Exclusions:');
-            Log::info($exclusions);
+            Log::info(print_r($exclusions->pluck('excluded_participant_id', 'participant_id'), true));
+
             // get participant previous matches
             $previousMatches = $participant->eventMatches()->whereIn('event_id', $previousEvents->pluck('id'))->get();
             Log::info('Previous Matches:');
-            Log::info($previousMatches);
+            Log::info(print_r($previousMatches->pluck('matched_participant_id', 'participant_id'), true));
+
             // get all participants that are not excluded and have not been matched over the past 3 years and have not already been selected in this lottery
             $availableParticipants = $participants
+                ->where('id', '!=', $participant->id)
                 ->whereNotIn('id', $exclusions->pluck('excluded_participant_id')->toArray())
                 ->whereNotIn('id', $previousMatches->pluck('matched_participant_id')->toArray())
-                ->whereNotIn('id', collect($event_matches)->pluck('matched_participant_id')->toArray());
+                ->whereNotIn('id', $event_matches->pluck('matched_participant_id')->toArray());
             Log::info('Available Participants:');
-            Log::info($availableParticipants);
+            Log::info(print_r($availableParticipants->pluck('name', 'id'), true));
+
             // if there are available participants
             if ($availableParticipants->isNotEmpty()) {
                 // create an event match for this participant
@@ -138,11 +152,19 @@ class EventController extends Controller
                 ]);
 
                 // add this event match to the event matches array
-                $event_matches[] = $eventMatch;
+                $event_matches->push($eventMatch);
             } else {
                 // if there are no available participants, we have a problem
                 Log::error('No available participants for participant ' . $participant->id);
             }
+
+//            if ($count === 4) {
+//                // just want to check the first 3 participants for now
+//                break;
+//            }
+            $count++;
         }
+
+        return back();
     }
 }

@@ -45,7 +45,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // setup event lottery route
-    Route::get('events/{event}/lottery', [EventController::class, 'runLottery'])->name('events.lottery');
+    Route::get('events/{event}/runLottery', [EventController::class, 'runLottery'])->name('events.runLottery');
+    Route::get('events/{event}/rerunLottery', [EventController::class, 'rerunLottery'])->name('events.rerunLottery');
 
     Route::resource('links', LinkController::class);
     Route::resource('events', EventController::class);
