@@ -35,7 +35,7 @@ defineProps({
         <div v-if="showParticipantLinks" class="mt-4 pl-4">
             <div v-if="participant.links.length > 0" v-for="link in participant.links" class="mt-3 text-gray-900 dark:text-gray-100">
                 <p class="mb-1 pb-1 border-b border-gray-700">{{ link.name }}</p>
-                <a class="text-sm dark:text-gray-400" :href="link.url" target="_blank" :title="link.url">{{ link.shortened_url }}</a>
+                <a class="text-sm dark:text-gray-400" :href="link.url" target="_blank" :title="link.url">{{ link.url }}</a>
             </div>
             <div v-else>
                 <p class="text-gray-900 dark:text-gray-100">No Links</p>

@@ -37,7 +37,6 @@ class EventController extends Controller
         // Validate the request data
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            // Add more validation rules for other fields if needed
         ]);
 
         // Find the active event
@@ -105,9 +104,6 @@ class EventController extends Controller
 
     public static function runLottery(Event $event)
     {
-        Log::info('Running lottery for event ' . $event->id);
-        Log::info('---------------------------------------');
-
         // setup event matches so that we can track who has been selected as we go
         $event_matches = collect();
 
@@ -117,22 +113,13 @@ class EventController extends Controller
         // get the previous 3 events
         $previousEvents = Event::where('id', '!=', $event->id)->orderBy('name', 'desc')->limit(3)->get();
 
-        $count = 1;
         // for each participant, use their exclusions and previous matches to find a match
         foreach ($participants as $participant) {
-            Log::info('Matches for this Lottery so far:');
-            Log::info(print_r($event_matches->pluck('matched_participant_id', 'participant_id'), true));
-            Log::info('Running matching for:' . $participant->name);
-
             // get participant exclusions
             $exclusions = $participant->exclusions()->get();
-            Log::info('Exclusions:');
-            Log::info(print_r($exclusions->pluck('excluded_participant_id', 'participant_id'), true));
 
             // get participant previous matches
             $previousMatches = $participant->eventMatches()->whereIn('event_id', $previousEvents->pluck('id'))->get();
-            Log::info('Previous Matches:');
-            Log::info(print_r($previousMatches->pluck('matched_participant_id', 'participant_id'), true));
 
             // get all participants that are not excluded and have not been matched over the past 3 years and have not already been selected in this lottery
             $availableParticipants = $participants
@@ -140,8 +127,6 @@ class EventController extends Controller
                 ->whereNotIn('id', $exclusions->pluck('excluded_participant_id')->toArray())
                 ->whereNotIn('id', $previousMatches->pluck('matched_participant_id')->toArray())
                 ->whereNotIn('id', $event_matches->pluck('matched_participant_id')->toArray());
-            Log::info('Available Participants:');
-            Log::info(print_r($availableParticipants->pluck('name', 'id'), true));
 
             // if there are available participants
             if ($availableParticipants->isNotEmpty()) {
@@ -157,12 +142,6 @@ class EventController extends Controller
                 // if there are no available participants, we have a problem
                 Log::error('No available participants for participant ' . $participant->id);
             }
-
-//            if ($count === 4) {
-//                // just want to check the first 3 participants for now
-//                break;
-//            }
-            $count++;
         }
 
         return back();

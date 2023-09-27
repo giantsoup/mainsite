@@ -1,9 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import InputError from "@/Components/InputError.vue";
-import TextInput from "@/Components/TextInput.vue";
-import InputLabel from "@/Components/InputLabel.vue";
+import Participant from "@/Components/Participant.vue";
 
 defineProps({
     canLogin: {
@@ -30,10 +27,9 @@ defineProps({
             <Link
                 v-if="$page.props.auth.user"
                 :href="route('dashboard')"
-                class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                >Dashboard</Link
-            >
-
+                class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
+                Dashboard
+            </Link>
             <template v-else>
                 <Link
                     :href="route('login')"
@@ -43,7 +39,7 @@ defineProps({
             </template>
         </div>
 
-        <div class="max-w-7xl mx-auto p-6 lg:p-8">
+        <div class="max-w-screen-xl md:min-w-[800px] mx-auto p-6 lg:p-8">
             <!--Header-->
             <div class="text-center">
                 <h1 class="block mt-8 text-4xl text-gray-900 dark:text-gray-100">Secret Santa</h1>
@@ -55,17 +51,13 @@ defineProps({
             <!--Main-->
             <div class="mt-10">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="block mb-4 text-2xl text-gray-900 dark:text-gray-100">Participants</h3>
-                    <hr>
-                    <div v-for="(participant, index) in participants" class="w-full mt-4 flex items-center border-b border-gray-100 pb-8">
-                        <div>
-                            <div class="text-lg pt-4 text-gray-900 dark:text-gray-100">{{ participant.name }}</div>
-                            <div v-for="link in participant.links" class="pl-6 pt-4 text-gray-900 dark:text-gray-100">
-                                <p>{{ link.name }}</p>
-                                <a :href="link.url" target="_blank">{{ link.url }}</a>
-                            </div>
-                        </div>
-                    </div>
+                    <h2 class="block pb-4 text-2xl text-gray-900 dark:text-gray-100 border-b border-gray-700">Participants</h2>
+                    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <Participant v-if="participants.length > 0" v-for="participant in participants" :participant="participant" />
+                        <li v-else>
+                            <p>No Participants have been added to this event.</p>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
