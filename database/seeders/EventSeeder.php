@@ -12,10 +12,31 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
-        Event::create([
-            'name' => '2023'
-            , 'is_active' => true
-            , 'has_pairings' => false
-        ]);
+        $events = [
+            [
+                'name' => '2020'
+                , 'is_active' => false
+                , 'has_pairings' => false
+            ],
+            [
+                'name' => '2021'
+                , 'is_active' => false
+                , 'has_pairings' => false
+            ],
+            [
+                'name' => '2022'
+                , 'is_active' => false
+                , 'has_pairings' => false
+            ],
+            [
+                'name' => '2023'
+                , 'is_active' => true
+                , 'has_pairings' => false
+            ],
+        ];
+
+        foreach ($events as $event) {
+            Event::create($event);
+        }
     }
 }
