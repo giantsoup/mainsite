@@ -8,6 +8,10 @@ defineProps({
         type: Object,
         required: true,
     },
+    showPhoneAndEmail: {
+        type: Boolean,
+        default: true,
+    },
 });
 </script>
 
@@ -18,12 +22,14 @@ defineProps({
                 <p class="text-xl font-medium text-gray-900 truncate dark:text-white">
                     {{ participant.name }}
                 </p>
-                <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                    {{ participant.email }}
-                </p>
-                <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                    {{ participant.formatted_phone }}
-                </p>
+                <div v-if="showPhoneAndEmail">
+                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                        {{ participant.email }}
+                    </p>
+                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                        {{ participant.formatted_phone }}
+                    </p>
+                </div>
             </div>
             <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                 <PrimaryButton @click="showParticipantLinks = !showParticipantLinks">
