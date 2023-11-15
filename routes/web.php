@@ -3,11 +3,11 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ExclusionController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Event;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -22,25 +22,18 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    $event = Event::where('is_active', true)->first() ?? null;
-    $participants = null;
-    if ($event) {
-        $participants = $event->participants()->with('links')->get() ?? null;
-    }
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login')
-        , 'event' => $event
-        , 'participants' => $participants
-    ]);
-});
+// Public Routes
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('secret-santa', [EventController::class, 'currentEvent'])->name('events.currentEvent');
 
+// Login Routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Private Routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 class EventController extends Controller
@@ -19,6 +20,22 @@ class EventController extends Controller
                 'events' => Event::orderBy('name', 'desc')->get()
             ]
         );
+    }
+
+    public function currentEvent()
+    {
+        $event = Event::where('is_active', true)->first() ?? null;
+
+        $participants = null;
+        if ($event) {
+            $participants = $event->participants()->with('links')->get() ?? null;
+        }
+
+        return Inertia::render('SecretSanta', [
+            'canLogin' => Route::has('login')
+            , 'event' => $event
+            , 'participants' => $participants
+        ]);
     }
 
     /**
