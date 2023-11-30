@@ -21,8 +21,8 @@ function formatDate(date) {
             </div>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl lg:max-w-xl mx-auto sm:px-6 lg:px-8">
+        <div class="py-6 sm:py-12">
+            <div class="max-w-7xl lg:max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="relative overflow-x-auto rounded border border-gray-700">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
