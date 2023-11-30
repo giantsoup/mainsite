@@ -6,6 +6,7 @@ use App\Http\Controllers\ExclusionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\PlaygroundController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Event;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('events', EventController::class);
     Route::resource('exclusions', ExclusionController::class);
     Route::resource('participants', ParticipantController::class);
+
+    // create a simple test page where i can do some real world testing for buttons and method calls
+    Route::get('/playground', [PlaygroundController::class, 'index'])->name('playground.index');
+    Route::get('/playground/runTest', [PlaygroundController::class, 'runTest'])->name('playground.runTest');
 });
 
 require __DIR__.'/auth.php';

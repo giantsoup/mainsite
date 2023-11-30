@@ -5,6 +5,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/drivers
 .env
 .env.backup
 .env.production
