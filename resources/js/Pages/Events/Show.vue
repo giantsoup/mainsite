@@ -51,8 +51,8 @@ function createParticipant() {
             </template>
         </template>
 
-        <div class="py-12 text-gray-800 dark:text-gray-200">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="py-12 max-w-7xl mx-auto text-gray-800 dark:text-gray-200 lg:flex lg:justify-center">
+            <div class="sm:px-6 lg:pl-8 lg:pr-4">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
                     <div class="flex justify-between">
                         <h2 class="text-2xl">Event Matches</h2>
@@ -102,21 +102,14 @@ function createParticipant() {
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="sm:px-6 lg:pr-8 lg:pl-4 flex-1">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <div class="">
-                        <div v-if="isNotDashboard" @click="showAddParticipantForm = !showAddParticipantForm" class="cursor-pointer text-gray-800 dark:text-gray-200 text-right">
-                            <span v-if="!showAddParticipantForm">Add Participants</span>
-                            <span v-if="showAddParticipantForm">Hide Add Participants</span>
-                        </div>
-                        <div v-if="showAddParticipantForm">
-                            <form @submit.prevent="createParticipant" class="max-w-lg">
-                                <div class="p-6 text-gray-900 dark:text-gray-100">
-                                    <div class="mb-4">
-                                        <div class="mt-3">
+                    <div v-if="showAddParticipantForm">
+                        <form @submit.prevent="createParticipant" class="pb-6 mb-4">
+                            <div class="text-gray-900 dark:text-gray-100">
+                                <div class="mb-4">
+                                    <div class="flex justify-between">
+                                        <div class="w-full pr-2">
                                             <InputLabel for="first_name" value="First Name" />
                                             <TextInput
                                                 id="first_name"
@@ -126,7 +119,7 @@ function createParticipant() {
                                             />
                                             <InputError class="mt-1" :message="form.errors.first_name" />
                                         </div>
-                                        <div class="mt-3">
+                                        <div class="w-full pl-2">
                                             <InputLabel for="last_name" value="Last Name" />
                                             <TextInput
                                                 id="last_name"
@@ -136,7 +129,9 @@ function createParticipant() {
                                             />
                                             <InputError class="mt-1" :message="form.errors.last_name" />
                                         </div>
-                                        <div class="mt-3">
+                                    </div>
+                                    <div class="flex justify-between mt-3">
+                                        <div class="w-full pr-2">
                                             <InputLabel for="email" value="Email" />
                                             <TextInput
                                                 id="email"
@@ -146,7 +141,7 @@ function createParticipant() {
                                             />
                                             <InputError class="mt-1" :message="form.errors.email" />
                                         </div>
-                                        <div class="mt-3">
+                                        <div class="w-full pl-2">
                                             <InputLabel for="phone" value="Phone" />
                                             <TextInput
                                                 id="phone"
@@ -156,15 +151,21 @@ function createParticipant() {
                                             />
                                             <InputError class="mt-1" :message="form.errors.phone" />
                                         </div>
-                                        <PrimaryButton type="submit" class="mt-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Add Participant</PrimaryButton>
                                     </div>
+                                    <PrimaryButton type="submit" class="mt-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Add Participant</PrimaryButton>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
 
-                    <h2 class="block mt-8 pb-4 text-2xl text-gray-900 dark:text-gray-100 border-b border-gray-700">Participants</h2>
-                    <ul class="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
+                    <div class="flex justify-between items-baseline pb-4 border-b border-gray-700">
+                        <h2 class="text-2xl text-gray-900 dark:text-gray-100">Participants</h2>
+                        <div v-if="isNotDashboard" @click="showAddParticipantForm = !showAddParticipantForm" class="cursor-pointer text-gray-800 dark:text-gray-200 text-right">
+                            <span v-if="!showAddParticipantForm">Add Participants</span>
+                            <span v-if="showAddParticipantForm">Hide Add Participants</span>
+                        </div>
+                    </div>
+                    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                         <Participant v-if="participants.length > 0" v-for="participant in participants" :participant="participant" />
                         <li v-else>
                             <p>No Participants have been added to this event.</p>

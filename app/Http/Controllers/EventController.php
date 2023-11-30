@@ -17,7 +17,7 @@ class EventController extends Controller
     {
         return Inertia::render('Events/Index',
             [
-                'events' => Event::orderBy('name', 'desc')->get()
+                'events' => Event::orderBy('date', 'desc')->get()
             ]
         );
     }
@@ -128,7 +128,7 @@ class EventController extends Controller
         $participants = $event->participants()->get();
 
         // get the previous 3 events
-        $previousEvents = Event::where('id', '!=', $event->id)->orderBy('name', 'desc')->limit(3)->get();
+        $previousEvents = Event::where('id', '!=', $event->id)->orderBy('date', 'desc')->limit(3)->get();
 
         // for each participant, use their exclusions and previous matches to find a match
         foreach ($participants as $participant) {
@@ -157,9 +157,11 @@ class EventController extends Controller
                 $event_matches->push($eventMatch);
             } else {
                 // if there are no available participants, we have a problem
-                Log::error('No available participants for participant ' . $participant->id);
+                Log::error('No available participants for participant ' . $participant->id . ': ' . $participant->name . ' in event ' . $event->id . '. Please check exclusions and previous matches.');
             }
         }
+
+        $event->update(['has_pairings' => true]);
 
         return back();
     }

@@ -19,6 +19,11 @@ defineProps({
         default: () => (new Date()).getFullYear(),
     },
 });
+function formatDate(date) {
+    return new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric'
+    });
+}
 </script>
 
 <template>
@@ -48,7 +53,7 @@ defineProps({
             <div class="text-center">
                 <h1 class="block mt-8 text-4xl text-gray-900 dark:text-gray-100">Secret Santa</h1>
                 <div>
-                    <h2 class="block mt-4 text-3xl text-gray-900 dark:text-gray-100">{{ event.name }}</h2>
+                    <h2 class="block mt-4 text-3xl text-gray-900 dark:text-gray-100">{{ formatDate(event.date) }}</h2>
                 </div>
             </div>
 

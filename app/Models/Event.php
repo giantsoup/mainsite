@@ -12,10 +12,13 @@ class Event extends Model
 
     protected $fillable = [
         'name'
+        , 'date'
         , 'is_active'
+        , 'has_pairings'
     ];
 
     protected $casts = [
+        'date' => 'date',
         'is_active' => 'boolean'
     ];
 

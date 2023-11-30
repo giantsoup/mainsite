@@ -25,7 +25,7 @@ use Inertia\Inertia;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('secret-santa', [EventController::class, 'currentEvent'])->name('events.currentEvent');
+Route::get('/secret-santa', [EventController::class, 'currentEvent'])->name('events.currentEvent');
 
 // Login Routes
 Route::middleware('auth')->group(function () {
@@ -39,8 +39,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // setup event lottery route
-    Route::get('events/{event}/runLottery', [EventController::class, 'runLottery'])->name('events.runLottery');
-    Route::get('events/{event}/rerunLottery', [EventController::class, 'rerunLottery'])->name('events.rerunLottery');
+    Route::get('/events/{event}/runLottery', [EventController::class, 'runLottery'])->name('events.runLottery');
+    Route::get('/events/{event}/rerunLottery', [EventController::class, 'rerunLottery'])->name('events.rerunLottery');
 
     Route::resource('links', LinkController::class);
     Route::resource('events', EventController::class);
