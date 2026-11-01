@@ -1,6 +1,6 @@
 <script setup xmlns="http://www.w3.org/1999/html">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { computed, ref } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -57,14 +57,10 @@ function createParticipant() {
                     <div class="flex justify-between">
                         <h2 class="text-2xl">Event Matches</h2>
                         <div v-if="!eventHasMatches && isNotDashboard">
-                            <Link :href="route('events.runLottery', props.event.id)">
-                                <PrimaryButton>Run Lottery</PrimaryButton>
-                            </Link>
+                            <PrimaryButton type="button" @click="router.post(route('events.runLottery', props.event.id))">Run Lottery</PrimaryButton>
                         </div>
                         <div v-if="eventHasMatches && isNotDashboard">
-                            <Link :href="route('events.rerunLottery', props.event.id)">
-                                <PrimaryButton>Re-Run Lottery</PrimaryButton>
-                            </Link>
+                            <PrimaryButton type="button" @click="router.post(route('events.rerunLottery', props.event.id))">Re-Run Lottery</PrimaryButton>
                         </div>
                     </div>
                     <div class="relative overflow-x-auto mt-4 rounded border border-gray-700">
