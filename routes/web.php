@@ -10,7 +10,6 @@ use App\Http\Controllers\PlaygroundController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Event;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,8 +38,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // setup event lottery route
-    Route::get('/events/{event}/runLottery', [EventController::class, 'runLottery'])->name('events.runLottery');
-    Route::get('/events/{event}/rerunLottery', [EventController::class, 'rerunLottery'])->name('events.rerunLottery');
+    Route::post('/events/{event}/runLottery', [EventController::class, 'runLottery'])->name('events.runLottery');
+    Route::post('/events/{event}/rerunLottery', [EventController::class, 'rerunLottery'])->name('events.rerunLottery');
 
     Route::resource('links', LinkController::class);
     Route::resource('events', EventController::class);
@@ -49,7 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // create a simple test page where i can do some real world testing for buttons and method calls
     Route::get('/playground', [PlaygroundController::class, 'index'])->name('playground.index');
-    Route::get('/playground/runTest', [PlaygroundController::class, 'runTest'])->name('playground.runTest');
+    Route::post('/playground/runTest', [PlaygroundController::class, 'runTest'])->name('playground.runTest');
 });
 
 require __DIR__.'/auth.php';

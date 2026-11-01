@@ -10,7 +10,7 @@ const runTest = () => {
     // call the runTest method in the controller
     // this will return the output from the api
     // and set it to the output prop
-    axios.get(route('playground.runTest'))
+    axios.post(route('playground.runTest'))
         .then(response => {
             console.log(response.data);
 
